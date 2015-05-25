@@ -10,4 +10,4 @@ class I2CDriver(Driver):
             "lcd"
         ]
 
-        self.address = options.get("address", {})
+        self.address = options.get("address", 0x27)
