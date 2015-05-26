@@ -87,9 +87,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/zorg-cli.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/auto.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/zorg-cli.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/auto.qhc"
 
 applehelp:
 	$(SPHINXBUILD) -b applehelp $(ALLSPHINXOPTS) $(BUILDDIR)/applehelp
@@ -104,8 +104,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/zorg-cli"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/zorg-cli"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/auto"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/auto"
 	@echo "# devhelp"
 
 epub:
