@@ -47,6 +47,8 @@ En = 0x04  # Enable bit
 Rw = 0x02  # Read/Write bit
 Rs = 0x01  # Register select bit
 
+DISPLAY_TEXT_ADDRESS = 0x3e
+
 
 class LCD(I2CDriver):
 
@@ -70,11 +72,11 @@ class LCD(I2CDriver):
         self.connection.i2c_write(self.address, 0, 0)
         self.connection.i2c_write(self.address, 1, 0)
 
-        sleep(0.05)
+        sleep(0.04)
 
         self._expanderWrite(self._backlightVal)
 
-        sleep(0.1)
+        sleep(0.04)
 
         self._write4bits(0x03 << 4)
 
@@ -88,7 +90,7 @@ class LCD(I2CDriver):
         self._write4bits(0x02 << 4)
         self._sendCommand(FUNCTIONSET | self._displayfunction)
 
-        self.displayOn()
+        self.display_on()
         self.clear()
 
         # Initialize to default text direction (for roman languages), set entry mode
@@ -100,14 +102,14 @@ class LCD(I2CDriver):
         Clears display and returns cursor to the home position (address 0).
         """
         self._sendCommand(CLEARDISPLAY)
-        sleep(2)
+        sleep(0.05)
 
     def home(self):
         """
         Returns cursor to home position.
         """
         self._sendCommand(RETURNHOME)
-        sleep(2)
+        sleep(0.05)
 
     def setCursor(self, col, row):
         """
@@ -116,7 +118,7 @@ class LCD(I2CDriver):
         row_offsets = [0x00, 0x40, 0x14, 0x54]
         self._sendCommand(SETDDRAMADDR | (col + row_offsets[row]))
 
-    def displayOff(self):
+    def display_off(self):
         """
         Sets Off of all display (D), cursor Off (C) and
         blink of cursor position character (B).
@@ -124,7 +126,7 @@ class LCD(I2CDriver):
         self._displaycontrol &= ~DISPLAYON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def displayOn(self):
+    def display_on(self):
         """
         Sets On of all display (D), cursor On (C) and
         blink of cursor position character (B).
@@ -132,63 +134,82 @@ class LCD(I2CDriver):
         self._displaycontrol |= DISPLAYON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def cursorOff(self):
+    def cursor_off(self):
         """
         Turns off the cursor.
         """
         self._displaycontrol &= ~CURSORON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def cursorOn(self):
+    def cursor_on(self):
         """
         Turns on the cursor.
         """
         self._displaycontrol |= CURSORON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def blinkOff(self):
+    def blink_off(self):
         """
         Turns off the cursor blinking character.
         """
         self._displaycontrol &= ~BLINKON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def blinkOn(self):
+    def blink_on(self):
         """
         Turns on the cursor blinking character.
         """
         self._displaycontrol |= BLINKON
         self._sendCommand(DISPLAYCONTROL | self._displaycontrol)
 
-    def backlightOff(self):
+    def backlight_off(self):
         """
         Turns off the back light.
         """
         self._backlightVal = NOBACKLIGHT
-        self._expanderWrite(0)
+        self.connection.i2c_write(self.address, 0x08, 0)
 
-    def backlightOn(self):
+    def backlight_on(self):
         """
         Turns on the back light.
         """
         self._backlightVal = BACKLIGHT
-        self._expanderWrite(0)
+        self.backlight_color(255, 255, 255)
 
-    def backlight_color(self):
+    def backlight_color(self, red, green, blue):
         """
         Set RGB color for the back light.
-        TODO: Add parameters for values
         """
-        self.connection.i2c_write(self.address, 0x08, 0xAA)
-        self.connection.i2c_write(self.address, 0x04, 255)
-        self.connection.i2c_write(self.address, 0x02, 255)
+        self.connection.i2c_write(self.address, 0x04, red)
+        self.connection.i2c_write(self.address, 0x03, green)
+        self.connection.i2c_write(self.address, 0x02, blue)
 
     def print_string(self, characters):
         """
         Prints characters on the LCD.
+        Automatically wraps text to fit 16 character wide display.
         """
-        for char in list(characters):
-            self._writeData(ord(char))
+
+        # Clear the display
+        self.clear()
+
+        self._sendCommand(0x08|0x04) # display on, no cursor
+        self._sendCommand(0x28) # 2 lines
+        sleep(0.05)
+        count = 0
+        row=0
+
+        for c in characters:
+            if c == '\n':
+                count = 0
+                row = 1
+                self._sendCommand(0xc0)
+                continue
+            if count == 16 and row == 0:
+                self._sendCommand(0xc0)
+                row += 1
+            count += 1
+            self.connection.i2c_write(DISPLAY_TEXT_ADDRESS, 0x40, ord(c))
 
     def _write4bits(self, val):
         self._expanderWrite(val)
@@ -196,15 +217,10 @@ class LCD(I2CDriver):
 
     def _expanderWrite(self, data):
 
-        print "AAA", data
-
-        x = data | self._backlightVal
-        y = x & 0xFF
-        self.connection.i2c_write(self.address, 0xFF, data)
+        x = data | self._backlightVal & 0xFF
+        self.connection.i2c_write(self.address, 0xFF, x)
 
     def _pulseEnable(self, data):
-
-        print "????????", data, En
 
         a = data | En
         self._expanderWrite(data)
@@ -214,7 +230,8 @@ class LCD(I2CDriver):
         sleep(0.05)
 
     def _sendCommand(self, value):
-        self._sendData(value, 0)
+        self.connection.i2c_write(DISPLAY_TEXT_ADDRESS, 0x80, value)
+        #self._sendData(value, 0)
 
     def _writeData(self, value):
         self._sendData(value, Rs)
