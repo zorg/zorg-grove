@@ -19,7 +19,7 @@ Contents:
 Overview
 --------
 
-This package includes python drivers for hardware devices.
+This package includes python drivers for controling hardware devices.
 Typically, this package will not be used directly. The normal useage
 would be to include it as a device driver when configuring a robot using
 `Zorg`_.
