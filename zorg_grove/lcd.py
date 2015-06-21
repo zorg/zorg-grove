@@ -62,6 +62,8 @@ class LCD(I2CDriver):
         self._displaycontrol = DISPLAYON | CURSOROFF | BLINKOFF
         self._displaymode = ENTRYLEFT | ENTRYSHIFTDECREMENT
 
+        self.bus = options.get("bus", 0)
+
         self.commands = [
             "clear", "home", "setCursor", "displayOff",
             "displayOn", "cursorOff", "cursorOn", "blinkOff",
@@ -71,8 +73,8 @@ class LCD(I2CDriver):
     def start(self):
 
         # initialise device
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0, 0)
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 1, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 1, 0)
 
         sleep(0.04)
 
@@ -169,7 +171,7 @@ class LCD(I2CDriver):
         Turns off the back light.
         """
         self._backlightVal = NOBACKLIGHT
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x08, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x08, 0)
 
     def backlight_on(self):
         """
@@ -182,9 +184,9 @@ class LCD(I2CDriver):
         """
         Set RGB color for the back light.
         """
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x04, red)
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x03, green)
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x02, blue)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x04, red)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x03, green)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x02, blue)
 
     def print_string(self, characters):
         """
@@ -211,7 +213,7 @@ class LCD(I2CDriver):
                 self._sendCommand(0xc0)
                 row += 1
             count += 1
-            self.connection.i2c_write(DISPLAY_TEXT_ADDRESS, 0x40, ord(c))
+            self.connection.i2c_write(self.bus, DISPLAY_TEXT_ADDRESS, 0x40, ord(c))
 
     def _write4bits(self, val):
         self._expanderWrite(val)
@@ -220,7 +222,7 @@ class LCD(I2CDriver):
     def _expanderWrite(self, data):
 
         x = data | self._backlightVal & 0xFF
-        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0xFF, x)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0xFF, x)
 
     def _pulseEnable(self, data):
 
@@ -232,7 +234,7 @@ class LCD(I2CDriver):
         sleep(0.05)
 
     def _sendCommand(self, value):
-        self.connection.i2c_write(DISPLAY_TEXT_ADDRESS, 0x80, value)
+        self.connection.i2c_write(self.bus, DISPLAY_TEXT_ADDRESS, 0x80, value)
         #self._sendData(value, 0)
 
     def _writeData(self, value):
