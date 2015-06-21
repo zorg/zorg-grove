@@ -17,21 +17,21 @@ req = open("requirements.txt")
 requirements = req.readlines()
 
 setup(
-    name="zorg-i2c",
+    name="zorg-grove",
     version="0.0.1",
-    url="https://github.com/zorg-framework/zorg-i2c",
+    url="https://github.com/zorg-framework/zorg-grove",
     description="Python framework for robotics and physical computing.",
     long_description=readme("readme.md"),
     author="Zorg Group",
     author_email="gunthercx@gmail.com",
     packages=find_packages(),
-    package_dir={"zorg_i2c": "zorg_i2c"},
+    package_dir={"zorg_grove": "zorg_grove"},
     include_package_data=True,
     install_requires=requirements,
     license="MIT",
     zip_safe=False,
     platforms=["any"],
-    keywords=["zorg", "i2c"],
+    keywords=["zorg", "grove"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

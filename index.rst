@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Zorg I2C Driver
-===============
+Zorg Drivers for Grove
+======================
 
-For full documentation visit `zorg-i2c.readthedocs.org`_.
+For full documentation visit `zorg-grove.readthedocs.org`_.
 
 Contents:
 ---------
@@ -31,7 +31,7 @@ Install this package using
 
 ::
 
-    pip install zorg-i2c
+    pip install zorg-grove
 
 Usage
 ------
@@ -50,5 +50,5 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. _zorg-i2c.readthedocs.org: http://zorg-i2c.readthedocs.org/
+.. _zorg-grove.readthedocs.org: http://zorg-grove.readthedocs.org/
 .. _Zorg: http://zorg-framework.github.io/

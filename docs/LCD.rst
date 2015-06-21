@@ -6,7 +6,7 @@ Documentation for the `Grove RGB LCD`_ I2C driver.
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: zorg_i2c
+.. automodule:: zorg_grove
    :members:
 
 .. autoclass:: LCD
