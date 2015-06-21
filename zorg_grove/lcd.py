@@ -1,4 +1,4 @@
-from zorg_i2c import I2CDriver
+from zorg.driver import Driver
 from time import sleep
 
 # i2c commands
@@ -47,6 +47,8 @@ En = 0x04  # Enable bit
 Rw = 0x02  # Read/Write bit
 Rs = 0x01  # Register select bit
 
+# I2C addresses for LCD and RGB backlight
+DISPLAY_COLOR_ADDRESS = 0x62
 DISPLAY_TEXT_ADDRESS = 0x3e
 
 
@@ -69,8 +71,8 @@ class LCD(I2CDriver):
     def start(self):
 
         # initialise device
-        self.connection.i2c_write(self.address, 0, 0)
-        self.connection.i2c_write(self.address, 1, 0)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0, 0)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 1, 0)
 
         sleep(0.04)
 
@@ -167,7 +169,7 @@ class LCD(I2CDriver):
         Turns off the back light.
         """
         self._backlightVal = NOBACKLIGHT
-        self.connection.i2c_write(self.address, 0x08, 0)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x08, 0)
 
     def backlight_on(self):
         """
@@ -180,9 +182,9 @@ class LCD(I2CDriver):
         """
         Set RGB color for the back light.
         """
-        self.connection.i2c_write(self.address, 0x04, red)
-        self.connection.i2c_write(self.address, 0x03, green)
-        self.connection.i2c_write(self.address, 0x02, blue)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x04, red)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x03, green)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0x02, blue)
 
     def print_string(self, characters):
         """
@@ -218,7 +220,7 @@ class LCD(I2CDriver):
     def _expanderWrite(self, data):
 
         x = data | self._backlightVal & 0xFF
-        self.connection.i2c_write(self.address, 0xFF, x)
+        self.connection.i2c_write(DISPLAY_COLOR_ADDRESS, 0xFF, x)
 
     def _pulseEnable(self, data):
 
