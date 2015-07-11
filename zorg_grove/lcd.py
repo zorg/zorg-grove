@@ -1,4 +1,5 @@
 from zorg.driver import Driver
+from zorg_i2c import I2CDriver
 from time import sleep
 
 # i2c commands
@@ -39,10 +40,6 @@ ONELINE = 0x00
 FIVExTENDOTS = 0x04
 FIVExEIGHTDOTS = 0x00
 
-# Flags for backlight control
-BACKLIGHT = 0x08
-NOBACKLIGHT = 0x00
-
 En = 0x04  # Enable bit
 Rw = 0x02  # Read/Write bit
 Rs = 0x01  # Register select bit
@@ -57,7 +54,6 @@ class LCD(I2CDriver):
     def __init__(self, options, connection):
         super(LCD, self).__init__(options, connection)
 
-        self._backlightVal = NOBACKLIGHT
         self._displayfunction = FOURBITMODE | TWOLINE | FIVExEIGHTDOTS
         self._displaycontrol = DISPLAYON | CURSOROFF | BLINKOFF
         self._displaymode = ENTRYLEFT | ENTRYSHIFTDECREMENT
@@ -65,21 +61,26 @@ class LCD(I2CDriver):
         self.bus = options.get("bus", 0)
 
         self.commands = [
-            "clear", "home", "setCursor", "displayOff",
-            "displayOn", "cursorOff", "cursorOn", "blinkOff",
-            "blinkOn", "backlightOff", "backlightOn", "print_string"
+            "clear", "home", "set_cursor", "display_off",
+            "display_on", "cursor_off", "cursor_on", "blink_off",
+            "blink_on", "backlight_off", "backlight_on", "print_string"
         ]
 
     def start(self):
 
-        # initialise device
-        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0, 0)
-        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 1, 0)
-
-        sleep(0.04)
-
-        self._expanderWrite(self._backlightVal)
-
+        # Initialize backlight, set to black (off)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x00, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x01, 0)
+        
+        # Currently magic values, but needed to write to rgb.
+        # Pulled from https://github.com/DexterInd/GrovePi/blob/master/Software/Python/grove_rgb_lcd/grove_rgb_lcd.py
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x08, 0xaa)
+        
+        # 0x04 = R, 0x03 = G, 0x02 = B
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x04, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x03, 0)
+        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x02, 0)
+        
         sleep(0.04)
 
         self._write4bits(0x03 << 4)
@@ -115,7 +116,7 @@ class LCD(I2CDriver):
         self._sendCommand(RETURNHOME)
         sleep(0.05)
 
-    def setCursor(self, col, row):
+    def set_cursor(self, col, row):
         """
         Sets cursor position.
         """
@@ -168,16 +169,16 @@ class LCD(I2CDriver):
 
     def backlight_off(self):
         """
-        Turns off the back light.
+        Turns off the back light. Does so by setting the
+        color to black.
         """
-        self._backlightVal = NOBACKLIGHT
-        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0x08, 0)
-
+        self.backlight_color(0, 0, 0)
+        
     def backlight_on(self):
         """
-        Turns on the back light.
+        Turns on the back light. Does so by setting the
+        color to white
         """
-        self._backlightVal = BACKLIGHT
         self.backlight_color(255, 255, 255)
 
     def backlight_color(self, red, green, blue):
@@ -216,21 +217,13 @@ class LCD(I2CDriver):
             self.connection.i2c_write(self.bus, DISPLAY_TEXT_ADDRESS, 0x40, ord(c))
 
     def _write4bits(self, val):
-        self._expanderWrite(val)
         self._pulseEnable(val)
-
-    def _expanderWrite(self, data):
-
-        x = data | self._backlightVal & 0xFF
-        self.connection.i2c_write(self.bus, DISPLAY_COLOR_ADDRESS, 0xFF, x)
 
     def _pulseEnable(self, data):
 
         a = data | En
-        self._expanderWrite(data)
         sleep(0.0001)
         b = data & ~En
-        self._expanderWrite(b)
         sleep(0.05)
 
     def _sendCommand(self, value):
