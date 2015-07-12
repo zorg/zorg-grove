@@ -1,5 +1,4 @@
 from zorg.driver import Driver
-from zorg_i2c import I2CDriver
 from time import sleep
 
 # i2c commands
@@ -49,7 +48,7 @@ DISPLAY_COLOR_ADDRESS = 0x62
 DISPLAY_TEXT_ADDRESS = 0x3e
 
 
-class LCD(I2CDriver):
+class LCD(Driver):
 
     def __init__(self, options, connection):
         super(LCD, self).__init__(options, connection)
