@@ -17,11 +17,7 @@ class LCDSmokeTests(SmokeTestCase):
         method on the driver class.
         """
         lcd = LCD(self.options, self.connection)
-        all_commands_have_methods = True
 
         for command in lcd.commands:
-            if command not in dir(lcd):
-                all_commands_have_methods = False
-
-        self.assertTrue(all_commands_have_methods)
+            self.assertIn(command, dir(lcd))
 
