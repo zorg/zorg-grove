@@ -51,4 +51,4 @@ Indices and tables
 * :ref:`search`
 
 .. _zorg-grove.readthedocs.org: http://zorg-grove.readthedocs.org/
-.. _Zorg: http://zorg-framework.github.io/
+.. _Zorg: http://zorg.github.io/
