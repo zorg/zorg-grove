@@ -8,3 +8,15 @@ This module implements drivers for controling devices using the
 and physical computing.
 
 ## [Documentation](http://zorg-grove.readthedocs.org/)
+
+# Hardware Support
+Zorg has a extensible system for connecting to hardware devices.
+The following Grove sensors and devices are currently supported:
+
+- [LCD screen](docs/LCD.rst)
+- [Temperature sensor](docs/temperature_sensor.rst)
+- [Microphone](docs/microphone.rst)
+- [Rotary Angle Sensor](docs/rotary_angle_sensor.rst)
+- [Servo](docs/servo.rst)
+
+[Open a new issue](https://github.com/zorg/zorg-grove/issues/new) to request support for additional components.
