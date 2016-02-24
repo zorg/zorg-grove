@@ -15,6 +15,10 @@ Contents:
    :maxdepth: 2
 
    docs/LCD
+   docs/microphone
+   docs/rotary_angle_sensor
+   docs/servo
+   docs/temperature_sensor
 
 Overview
 --------
@@ -41,7 +45,7 @@ string.
 
 ::
 
-    "zorg_gpio.Servo"
+    "zorg_grove.Servo"
 
 Indices and tables
 ==================

@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from distutils.core import setup, find_packages
+from setuptools import setup, find_packages
 
 try:
     from pypandoc import convert
@@ -15,10 +12,14 @@ except ImportError:
 
 req = open("requirements.txt")
 requirements = req.readlines()
+req.close()
+
+# Dynamically retrieve the version from the module
+version_string = __import__('zorg_grove').__version__
 
 setup(
     name="zorg-grove",
-    version="0.0.1",
+    version=version_string,
     url="https://github.com/zorg/zorg-grove",
     description="Python framework for robotics and physical computing.",
     long_description=readme("readme.md"),
