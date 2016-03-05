@@ -16,9 +16,9 @@ Contents:
 
    docs/LCD
    docs/microphone
-   docs/rotary_angle_sensor
+   docs/rotary-angle-sensor
    docs/servo
-   docs/temperature_sensor
+   docs/temperature-sensor
 
 Overview
 --------
