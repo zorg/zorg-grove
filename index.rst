@@ -1,8 +1,3 @@
-.. auto documentation master file, created by
-   sphinx-quickstart on Wed May 27 07:30:57 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Zorg Drivers for Grove
 ======================
 
@@ -38,7 +33,7 @@ Install this package using
     pip install zorg-grove
 
 Usage
-------
+-----
 
 The driver should be included using the dot-notated format of the import
 string.
