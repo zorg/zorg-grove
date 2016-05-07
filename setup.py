@@ -5,22 +5,21 @@ from setuptools import setup, find_packages
 import os
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    path = os.path.join(os.path.dirname(__file__), fname)
+    return open(path).read()
 
 req = open('requirements.txt')
 requirements = req.readlines()
 req.close()
 
-# Dynamically retrieve the version from the module
-version_string = __import__('zorg_grove').__version__
-
 setup(
     name='zorg-grove',
-    version=version_string,
+    version='0.0.3',
     url='https://github.com/zorg/zorg-grove',
     description='Python framework for robotics and physical computing.',
     long_description=read('README.rst'),
     author='Zorg Group',
+    author_email='gunthercx@gmail.com',
     maintainer_email='gunthercx@gmail.com',
     packages=find_packages(),
     package_dir={'zorg_grove': 'zorg_grove'},
