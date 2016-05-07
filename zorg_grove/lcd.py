@@ -227,7 +227,6 @@ class LCD(Driver):
 
     def _sendCommand(self, value):
         self.connection.i2c_write(self.bus, DISPLAY_TEXT_ADDRESS, 0x80, value)
-        #self._sendData(value, 0)
 
     def _writeData(self, value):
         self._sendData(value, Rs)
@@ -235,8 +234,6 @@ class LCD(Driver):
     def _sendData(self, val, mode):
         highnib = val & 0xf0
         lownib = (val << 4) & 0xf0
-
-        print "HIGH_LOW", highnib, lownib
 
         self._write4bits(highnib | mode)
         self._write4bits(lownib | mode)
