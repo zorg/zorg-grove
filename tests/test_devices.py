@@ -49,10 +49,34 @@ class TestTemperatureSensor(TestCase):
         self.sensor = TemperatureSensor({}, MockAdaptor())
 
     def test_read_celsius(self):
-        self.assertEqual(self.sensor.read_celsius(), 25)
+        """
+        Note: We assert almost equal because there are slight
+        floating point differences between python 2 and 3.
+        """
+        self.assertAlmostEqual(
+            self.sensor.read_celsius(),
+            25.0,
+            delta=3
+        )
 
     def test_read_fahrenheit(self):
-        self.assertEqual(self.sensor.read_fahrenheit(), 77)
+        """
+        Note: We assert almost equal because there are slight
+        floating point differences between python 2 and 3.
+        """
+        self.assertAlmostEqual(
+            self.sensor.read_fahrenheit(),
+            77.0,
+            delta=3
+        )
 
     def test_read_kelvin(self):
-        self.assertEqual(self.sensor.read_kelvin(), 298.15)
+        """
+        Note: We assert almost equal because there are slight
+        floating point differences between python 2 and 3.
+        """
+        self.assertAlmostEqual(
+            self.sensor.read_kelvin(),
+            298.15,
+            delta=3
+        )
