@@ -1,5 +1,6 @@
 # zorg-grove
 
+[![Join the chat at https://gitter.im/zorg/zorg](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zorg/zorg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/zorg/zorg-grove.svg?branch=master)](https://travis-ci.org/zorg/zorg-grove)
 [![Documentation Status](https://readthedocs.org/projects/zorg-grove/badge/?version=latest)](http://zorg-grove.readthedocs.org)
 [![Join the chat at https://gitter.im/zorg-framework/zorg](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zorg-framework/zorg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
